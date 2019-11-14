@@ -8,6 +8,8 @@ import java.awt.event.*;
 import java.awt.datatransfer.*;
 import javax.swing.*;
 import java.io.*;
+import java.util.List; 
+import java.util.ArrayList; 
 
 SDrop drop;
 
@@ -22,6 +24,7 @@ boolean mouseMoved = false;
 boolean showCopied = false;
 
 ArrayList<String> palette;
+String[] pal = new String[0];
 
 String selection = "";
 StringSelection data = new StringSelection(selection);
@@ -46,8 +49,8 @@ void setup() {
   text("Drag & Drop an Image", 0, 0);
 
   //palette.add(color(255, 0, 0));
-    textSize(24);
-    textAlign(CENTER);
+  textSize(24);
+  textAlign(CENTER);
 }
 
 void draw() {
@@ -61,6 +64,7 @@ void draw() {
     cols = numRows;
     gridSize = floor(width/numRows);
     palette.clear();
+    pal = new String[0];
     //println("Even");
   } else {
   }
@@ -80,7 +84,8 @@ void draw() {
         color co = m.pixels[loc];
 
         palette.add("#" + hex(color(co), 6));
-        print();
+
+        pal = append(pal, "#" + hex(color(co), 6));
 
         fill(co);
         stroke(0);
@@ -88,15 +93,14 @@ void draw() {
       }
     }
   }
-  
-  if(keyPressed && key == 'g') {
-    
+
+  if (keyPressed && key == 'g') {
   }
-  
+
   //println(gridSize, rows);
-  println();
+  //println();
   if (palette.size() == rows * cols && paletteFull == false) {
-    print(palette);
+    //print(palette);
     paletteFull = true;
   }
 
@@ -125,14 +129,46 @@ void mouseMoved() {
 void mousePressed() {
   frameCount = 0;
   showCopied = true;
-  
+
   String colorlist = "" + palette;
-  StringSelection data = new StringSelection(colorlist);
+
+  //palette = splice(palette, "{", 0);
+
+  //String[] p = palette.toArray();
+
+  String p = "{";
+
+
+
+  String[] cos = new String[palette.size()];
+
+  for (int i=0; i<cos.length; i++) {
+    p.concat(palette.get(i));
+  }
+
+  println("Pal" + pal);
+
+  for (int i=0; i<pal.length; i++) {
+    println(pal[i]);
+  }
+
+  String c = join(pal, ",");
+  
+  //c = splice(c, "{", 0);
+  
+  println(c);
+  //p = splice(p, "{", 0);
+
+  //String joinedNumbers = join(palette.toArray(), ", "); 
+
+  StringSelection data = new StringSelection(c);
   Clipboard clipboard;
   clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
   clipboard.setContents(data, data);
-  
-  println("Copied", data);
+
+  //println("Copied", data);
+
+  //  println(p);
 }
 
 
@@ -152,9 +188,9 @@ void dropEvent(DropEvent theDropEvent) {
 }
 
 void copyGLSL() {
-  for(String c : palette){
-    println(c);
-    
+  for (String c : palette) {
+    //println(c);
+
     float co = color(unhex(c)) / 255;
   }
 }
